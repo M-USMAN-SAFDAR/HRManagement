@@ -60,6 +60,43 @@ watch(draftPayrolls, (newVal) => {
   }
 }, { immediate: true });
 
+const editingRowId = ref(null);
+
+const startEditRow = (id) => {
+  editingRowId.value = id;
+};
+
+const cancelEditRow = () => {
+  editingRowId.value = null;
+  loadPayrollData();
+};
+
+const executeSinglePayrollSave = async (item) => {
+  try {
+    const payload = {
+      month: selectedMonth.value,
+      year: selectedYear.value,
+      payrolls: [{
+        employeeId: item.employeeId._id,
+        basicSalary: item.basicSalary,
+        allowances: [{ name: 'Allowances', amount: item.allowancesTotal || 0 }],
+        deductions: [{ name: 'Deductions', amount: item.deductionsTotal || 0 }],
+        taxAmount: item.taxAmount || 0,
+      }]
+    };
+    const result = await payrollStore.processPayroll(payload);
+    if (result.success) {
+      addToast(`Payslip for ${item.employeeId.firstName} approved successfully!`, 'success');
+      editingRowId.value = null;
+      loadPayrollData();
+    } else {
+      addToast(result.message, 'error');
+    }
+  } catch (err) {
+    addToast('Failed to save payslip.', 'error');
+  }
+};
+
 const executePayrollRun = async () => {
   if (localPayrolls.value.length === 0) return addToast('No employees found to process', 'warning');
 
@@ -166,40 +203,70 @@ onMounted(async () => {
           <span class="text-xs text-slate-400 font-mono">Month: {{ selectedMonth }}/{{ selectedYear }}</span>
         </div>
 
-        <HrmTable :headers="['Employee', 'Base Pay', 'Allowances', 'Deductions', 'Income Tax', 'Net Pay', 'Status']" :items="localPayrolls" :isLoading="isLoading">
+        <HrmTable :headers="['Employee', 'Base Pay', 'Allowances', 'Deductions', 'Income Tax', 'Net Pay', 'Status', 'Actions']" :items="localPayrolls" :isLoading="isLoading">
           <template #row="{ item }">
             <td class="px-6 py-3.5">
               <div class="text-xs font-semibold text-white leading-none mb-1">{{ item.employeeId?.firstName }} {{ item.employeeId?.lastName }}</div>
               <span class="text-[9px] text-slate-500 font-mono block">{{ item.employeeId?.employeeCode }}</span>
             </td>
             <td class="px-6 py-3.5 text-xs font-mono">
-              <div class="flex items-center gap-1 bg-[#0E1322] border border-brand-border/60 rounded px-2 py-1 max-w-[120px]">
+              <div v-if="editingRowId === item.employeeId._id" class="flex items-center gap-1 bg-[#0E1322] border border-brand-border/60 rounded px-2 py-1 max-w-[120px]">
                 <span class="text-[9px] text-slate-500 font-bold select-none">{{ currencySymbol.trim() }}</span>
                 <input type="number" v-model.number="item.basicSalary" class="w-full bg-transparent text-xs text-white outline-none border-none p-0 focus:ring-0" />
               </div>
+              <span v-else>{{ currencySymbol }}{{ (item.basicSalary || 0).toLocaleString() }}</span>
             </td>
-            <td class="px-6 py-3.5 text-xs font-mono">
-              <div class="flex items-center gap-1 bg-[#0E1322] border border-brand-border/60 rounded px-2 py-1 max-w-[120px]">
+            <td class="px-6 py-3.5 text-xs font-mono text-slate-300">
+              <div v-if="editingRowId === item.employeeId._id" class="flex items-center gap-1 bg-[#0E1322] border border-brand-border/60 rounded px-2 py-1 max-w-[120px]">
                 <span class="text-[9px] text-slate-500 font-bold select-none">{{ currencySymbol.trim() }}</span>
                 <input type="number" v-model.number="item.allowancesTotal" class="w-full bg-transparent text-xs text-white outline-none border-none p-0 focus:ring-0" />
               </div>
+              <span v-else>{{ currencySymbol }}{{ (item.allowancesTotal || 0).toLocaleString() }}</span>
             </td>
-            <td class="px-6 py-3.5 text-xs font-mono">
-              <div class="flex items-center gap-1 bg-[#0E1322] border border-brand-border/60 rounded px-2 py-1 max-w-[120px]">
+            <td class="px-6 py-3.5 text-xs font-mono text-slate-400">
+              <div v-if="editingRowId === item.employeeId._id" class="flex items-center gap-1 bg-[#0E1322] border border-brand-border/60 rounded px-2 py-1 max-w-[120px]">
                 <span class="text-[9px] text-slate-500 font-bold select-none">{{ currencySymbol.trim() }}</span>
                 <input type="number" v-model.number="item.deductionsTotal" class="w-full bg-transparent text-xs text-white outline-none border-none p-0 focus:ring-0" />
               </div>
+              <span v-else>{{ currencySymbol }}{{ (item.deductionsTotal || 0).toLocaleString() }}</span>
             </td>
-            <td class="px-6 py-3.5 text-xs font-mono">
-              <div class="flex items-center gap-1 bg-[#0E1322] border border-brand-border/60 rounded px-2 py-1 max-w-[120px]">
+            <td class="px-6 py-3.5 text-xs font-mono text-rose-400/90">
+              <div v-if="editingRowId === item.employeeId._id" class="flex items-center gap-1 bg-[#0E1322] border border-brand-border/60 rounded px-2 py-1 max-w-[120px]">
                 <span class="text-[9px] text-slate-500 font-bold select-none">{{ currencySymbol.trim() }}</span>
                 <input type="number" v-model.number="item.taxAmount" class="w-full bg-transparent text-xs text-white outline-none border-none p-0 focus:ring-0" />
               </div>
+              <span v-else>{{ currencySymbol }}{{ (item.taxAmount || 0).toLocaleString() }}</span>
             </td>
             <td class="px-6 py-3.5 text-xs font-mono font-bold text-brand-blue">
               {{ currencySymbol }}{{ Math.round(item.basicSalary + item.allowancesTotal - item.deductionsTotal - item.taxAmount).toLocaleString() }}
             </td>
             <td class="px-6 py-3.5"><HrmBadge :status="item.status || 'draft'" /></td>
+            <td class="px-6 py-3.5">
+              <div class="flex items-center gap-2">
+                <div v-if="editingRowId === item.employeeId._id" class="flex items-center gap-1.5">
+                  <button 
+                    @click="executeSinglePayrollSave(item)" 
+                    class="text-[10px] text-emerald-400 hover:text-emerald-300 px-2 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded cursor-pointer font-bold transition"
+                  >
+                    Approve
+                  </button>
+                  <button 
+                    @click="cancelEditRow" 
+                    class="text-[10px] text-slate-400 hover:text-slate-300 px-2 py-1 bg-slate-500/10 hover:bg-slate-500/20 border border-slate-500/20 rounded cursor-pointer font-bold transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <div v-else>
+                  <button 
+                    @click="startEditRow(item.employeeId._id)" 
+                    class="text-[10px] text-brand-blue hover:text-blue-400 px-2.5 py-1 bg-brand-blue/10 hover:bg-brand-blue/20 border border-brand-blue/20 rounded cursor-pointer font-bold transition"
+                  >
+                    Edit Slip
+                  </button>
+                </div>
+              </div>
+            </td>
           </template>
         </HrmTable>
       </div>
