@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { usePayrollStore } from '../stores/payroll';
+import { useAuthStore } from '../stores/auth';
 import { useToast } from '../composables/useToast';
 import HrmButton from '../components/ui/HrmButton.vue';
 import HrmTable from '../components/ui/HrmTable.vue';
@@ -8,7 +9,20 @@ import HrmBadge from '../components/ui/HrmBadge.vue';
 import { DollarSign, FileText, CheckCircle2, ChevronRight, History } from 'lucide-vue-next';
 
 const payrollStore = usePayrollStore();
+const authStore = useAuthStore();
 const { addToast } = useToast();
+
+const currencySymbol = computed(() => {
+  const currency = authStore.companySettings?.currency || 'PKR';
+  const symbolMap = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    JPY: '¥',
+    PKR: 'Rs. '
+  };
+  return symbolMap[currency] || (currency + ' ');
+});
 
 const activeTab = ref('run'); // 'run' | 'history'
 
@@ -69,8 +83,11 @@ const triggerPayslipDownload = async (id) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   loadPayrollData();
+  if (!authStore.companySettings) {
+    await authStore.fetchCompanySettings();
+  }
 });
 </script>
 
@@ -142,15 +159,15 @@ onMounted(() => {
               <div class="text-xs font-semibold text-white">{{ item.employeeId?.firstName }} {{ item.employeeId?.lastName }}</div>
               <span class="text-[10px] text-slate-500 font-mono">{{ item.employeeId?.employeeCode }}</span>
             </td>
-            <td class="px-6 py-3.5 text-xs font-mono">${{ (item.basicSalary || 0).toLocaleString() }}</td>
+            <td class="px-6 py-3.5 text-xs font-mono">{{ currencySymbol }}{{ (item.basicSalary || 0).toLocaleString() }}</td>
             <td class="px-6 py-3.5 text-xs font-mono text-slate-300">
-              ${{ (item.allowances || []).reduce((acc, a) => acc + (a.amount || 0), 0).toLocaleString() }}
+              {{ currencySymbol }}{{ (item.allowances || []).reduce((acc, a) => acc + (a.amount || 0), 0).toLocaleString() }}
             </td>
             <td class="px-6 py-3.5 text-xs font-mono text-slate-400">
-              ${{ (item.deductions || []).reduce((acc, d) => acc + (d.amount || 0), 0).toLocaleString() }}
+              {{ currencySymbol }}{{ (item.deductions || []).reduce((acc, d) => acc + (d.amount || 0), 0).toLocaleString() }}
             </td>
-            <td class="px-6 py-3.5 text-xs font-mono text-rose-400/90">${{ (item.taxAmount || 0).toLocaleString() }}</td>
-            <td class="px-6 py-3.5 text-xs font-mono font-bold text-brand-blue">${{ Math.round(item.netPay || 0).toLocaleString() }}</td>
+            <td class="px-6 py-3.5 text-xs font-mono text-rose-400/90">{{ currencySymbol }}{{ (item.taxAmount || 0).toLocaleString() }}</td>
+            <td class="px-6 py-3.5 text-xs font-mono font-bold text-brand-blue">{{ currencySymbol }}{{ Math.round(item.netPay || 0).toLocaleString() }}</td>
             <td class="px-6 py-3.5"><HrmBadge :status="item.status || 'draft'" /></td>
           </template>
         </HrmTable>
@@ -171,9 +188,9 @@ onMounted(() => {
           <td class="px-6 py-3.5 text-xs font-mono">
             {{ ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][item.month - 1] }} {{ item.year }}
           </td>
-          <td class="px-6 py-3.5 text-xs font-mono">${{ (item.basicSalary || 0).toLocaleString() }}</td>
-          <td class="px-6 py-3.5 text-xs font-mono text-rose-400">${{ (item.taxAmount || 0).toLocaleString() }}</td>
-          <td class="px-6 py-3.5 text-xs font-mono font-bold text-brand-blue">${{ Math.round(item.netPay || 0).toLocaleString() }}</td>
+          <td class="px-6 py-3.5 text-xs font-mono">{{ currencySymbol }}{{ (item.basicSalary || 0).toLocaleString() }}</td>
+          <td class="px-6 py-3.5 text-xs font-mono text-rose-400">{{ currencySymbol }}{{ (item.taxAmount || 0).toLocaleString() }}</td>
+          <td class="px-6 py-3.5 text-xs font-mono font-bold text-brand-blue">{{ currencySymbol }}{{ Math.round(item.netPay || 0).toLocaleString() }}</td>
           <td class="px-6 py-3.5">
             <HrmButton variant="secondary" class="py-1 px-3 text-xs" @click="triggerPayslipDownload(item._id)">
               <FileText class="w-3.5 h-3.5 text-brand-purple" />

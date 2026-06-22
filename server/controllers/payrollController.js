@@ -1,5 +1,6 @@
 const Payroll = require('../models/Payroll');
 const Employee = require('../models/Employee');
+const CompanySettings = require('../models/CompanySettings');
 const { generatePayslipPdf } = require('../services/pdfGenerator');
 const sendResponse = require('../utils/apiResponse');
 
@@ -90,6 +91,12 @@ exports.processPayroll = async (req, res, next) => {
     const processedItems = [];
 
     for (const item of payrolls) {
+      // Enforce that already paid payroll cannot be overwritten or edited
+      const existingPaid = await Payroll.findOne({ employeeId: item.employeeId, month, year, status: 'paid' });
+      if (existingPaid) {
+        return sendResponse(res, 400, false, `Payroll for period ${month}/${year} has already been paid and cannot be edited.`);
+      }
+
       // Allowances & deductions validation
       const allowances = item.allowances || [];
       const deductions = item.deductions || [];
@@ -183,7 +190,9 @@ exports.downloadPayslip = async (req, res, next) => {
       return sendResponse(res, 403, false, 'Forbidden: You cannot access this payslip');
     }
 
-    const doc = generatePayslipPdf(payroll);
+    const settings = await CompanySettings.findOne();
+    const currency = settings?.currency || 'PKR';
+    const doc = generatePayslipPdf(payroll, currency);
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename=payslip_${payroll.year}_${payroll.month}.pdf`);

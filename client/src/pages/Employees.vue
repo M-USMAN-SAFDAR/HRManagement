@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useEmployeeStore } from '../stores/employee';
 import { useSettingsStore } from '../stores/settings';
+import { useAuthStore } from '../stores/auth';
 import { useToast } from '../composables/useToast';
 import HrmButton from '../components/ui/HrmButton.vue';
 import HrmModal from '../components/ui/HrmModal.vue';
@@ -11,7 +12,20 @@ import { Search, SlidersHorizontal, UploadCloud, Download, Plus, ArrowRight, Arr
 
 const employeeStore = useEmployeeStore();
 const settingsStore = useSettingsStore();
+const authStore = useAuthStore();
 const { addToast } = useToast();
+
+const currencySymbol = computed(() => {
+  const currency = authStore.companySettings?.currency || 'PKR';
+  const symbolMap = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    JPY: '¥',
+    PKR: 'Rs. '
+  };
+  return symbolMap[currency] || (currency + ' ');
+});
 
 // Filters & search state
 const searchQuery = ref('');
@@ -170,9 +184,12 @@ const deleteEmp = async (id) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   loadEmployees();
   settingsStore.fetchDepartments();
+  if (!authStore.companySettings) {
+    await authStore.fetchCompanySettings();
+  }
 });
 </script>
 
@@ -441,10 +458,10 @@ onMounted(() => {
           <div>
             <label class="block text-xs font-medium text-slate-400 mb-1.5">Salary Band</label>
             <select v-model="form.salaryBand" class="w-full bg-black/35 border border-brand-border rounded px-3 py-2 text-sm text-white cursor-pointer">
-              <option value="Band A">Band A ($10,000)</option>
-              <option value="Band B">Band B ($6,000)</option>
-              <option value="Band C">Band C ($4,000)</option>
-              <option value="Band D">Band D ($2,500)</option>
+              <option value="Band A">Band A ({{ currencySymbol }}10,000)</option>
+              <option value="Band B">Band B ({{ currencySymbol }}6,000)</option>
+              <option value="Band C">Band C ({{ currencySymbol }}4,000)</option>
+              <option value="Band D">Band D ({{ currencySymbol }}2,500)</option>
             </select>
           </div>
         </div>

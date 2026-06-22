@@ -42,8 +42,8 @@ const seedDB = async () => {
     console.log('Database cleared! Seeding Company Settings...');
     const settings = new CompanySettings({
       name: 'Vercel HR',
-      timezone: 'America/New_York',
-      currency: 'USD',
+      timezone: 'Asia/Karachi',
+      currency: 'PKR',
     });
     await settings.save();
 

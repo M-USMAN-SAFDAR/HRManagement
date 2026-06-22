@@ -23,7 +23,7 @@ const isEditingLeaveType = ref(false);
 const editingLeaveTypeId = ref(null);
 
 // Settings Form
-const settingsForm = ref({ name: 'HRM Systems', timezone: 'UTC', currency: 'USD' });
+const settingsForm = ref({ name: 'HRM Systems', timezone: 'Asia/Karachi', currency: 'PKR' });
 const logoFile = ref(null);
 
 // Department Form
@@ -199,6 +199,7 @@ onMounted(() => {
             <div>
               <label class="block text-xs font-medium text-slate-400 mb-1.5 font-mono">System Timezone</label>
               <select v-model="settingsForm.timezone" class="w-full bg-[#0E1322] border border-brand-border rounded px-3 py-2 text-sm text-white focus:border-brand-blue outline-none cursor-pointer">
+                <option value="Asia/Karachi">PKT (Pakistan Standard Time)</option>
                 <option value="UTC">UTC (Coordinated Universal Time)</option>
                 <option value="America/New_York">EST (Eastern Standard Time)</option>
                 <option value="Europe/London">GMT (Greenwich Mean Time)</option>
@@ -209,6 +210,7 @@ onMounted(() => {
             <div>
               <label class="block text-xs font-medium text-slate-400 mb-1.5 font-mono">Default Currency Code</label>
               <select v-model="settingsForm.currency" class="w-full bg-[#0E1322] border border-brand-border rounded px-3 py-2 text-sm text-white focus:border-brand-blue outline-none cursor-pointer">
+                <option value="PKR">PKR (Pakistani Rupee, ₨)</option>
                 <option value="USD">USD (United States Dollar, $)</option>
                 <option value="EUR">EUR (Euro, €)</option>
                 <option value="GBP">GBP (British Pound, £)</option>

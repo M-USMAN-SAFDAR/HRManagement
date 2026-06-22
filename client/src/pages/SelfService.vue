@@ -11,6 +11,18 @@ import { User, Phone, MapPin, Calendar, FileText, Lock, Save } from 'lucide-vue-
 const authStore = useAuthStore();
 const { addToast } = useToast();
 
+const currencySymbol = computed(() => {
+  const currency = authStore.companySettings?.currency || 'PKR';
+  const symbolMap = {
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    JPY: '¥',
+    PKR: 'Rs. '
+  };
+  return symbolMap[currency] || (currency + ' ');
+});
+
 const employeeId = computed(() => authStore.user?.employeeId);
 const user = computed(() => authStore.user);
 
@@ -101,8 +113,11 @@ const triggerPayslipDownload = async (id) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   loadPortalData();
+  if (!authStore.companySettings) {
+    await authStore.fetchCompanySettings();
+  }
 });
 </script>
 
@@ -199,9 +214,9 @@ onMounted(() => {
               <td class="px-6 py-3 text-xs font-mono">
                 {{ ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][(item.month - 1)] }} {{ item.year }}
               </td>
-              <td class="px-6 py-3 text-xs font-mono text-slate-300">${{ (item.basicSalary || 0).toLocaleString() }}</td>
-              <td class="px-6 py-3 text-xs font-mono text-rose-400">${{ (item.taxAmount || 0).toLocaleString() }}</td>
-              <td class="px-6 py-3 text-xs font-mono font-bold text-brand-blue">${{ Math.round(item.netPay || 0).toLocaleString() }}</td>
+              <td class="px-6 py-3 text-xs font-mono text-slate-300">{{ currencySymbol }}{{ (item.basicSalary || 0).toLocaleString() }}</td>
+              <td class="px-6 py-3 text-xs font-mono text-rose-400">{{ currencySymbol }}{{ (item.taxAmount || 0).toLocaleString() }}</td>
+              <td class="px-6 py-3 text-xs font-mono font-bold text-brand-blue">{{ currencySymbol }}{{ Math.round(item.netPay || 0).toLocaleString() }}</td>
               <td class="px-6 py-3">
                 <HrmButton variant="secondary" class="py-1 px-3 text-xs" @click="triggerPayslipDownload(item._id)">
                   Download PDF

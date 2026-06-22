@@ -17,7 +17,8 @@ const printer = new PdfPrinter(fonts);
  * @param {Object} payroll Payroll mongoose model object
  * @returns {PDFKit.PDFDocument} PDF document stream
  */
-const generatePayslipPdf = (payroll) => {
+const generatePayslipPdf = (payroll, currency = 'PKR') => {
+  const currencySymbol = currency === 'PKR' ? 'Rs. ' : (currency === 'USD' ? '$' : currency + ' ');
   const employee = payroll.employeeId;
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -27,24 +28,24 @@ const generatePayslipPdf = (payroll) => {
 
   const allowancesRows = payroll.allowances.map(a => [
     { text: a.name, margin: [0, 5, 0, 5], font: 'Helvetica' },
-    { text: `$${a.amount.toFixed(2)}`, alignment: 'right', margin: [0, 5, 0, 5], font: 'Helvetica' }
+    { text: `${currencySymbol}${a.amount.toFixed(2)}`, alignment: 'right', margin: [0, 5, 0, 5], font: 'Helvetica' }
   ]);
   if (allowancesRows.length === 0) {
     allowancesRows.push([
       { text: 'None', margin: [0, 5, 0, 5], font: 'Helvetica', color: '#888' },
-      { text: '$0.00', alignment: 'right', margin: [0, 5, 0, 5], font: 'Helvetica', color: '#888' }
+      { text: `${currencySymbol}0.00`, alignment: 'right', margin: [0, 5, 0, 5], font: 'Helvetica', color: '#888' }
     ]);
   }
 
   const deductionsRows = payroll.deductions.map(d => [
     { text: d.name, margin: [0, 5, 0, 5], font: 'Helvetica' },
-    { text: `$${d.amount.toFixed(2)}`, alignment: 'right', margin: [0, 5, 0, 5], font: 'Helvetica' }
+    { text: `${currencySymbol}${d.amount.toFixed(2)}`, alignment: 'right', margin: [0, 5, 0, 5], font: 'Helvetica' }
   ]);
   
   // Add Tax
   deductionsRows.push([
     { text: 'Income Tax', margin: [0, 5, 0, 5], font: 'Helvetica' },
-    { text: `$${payroll.taxAmount.toFixed(2)}`, alignment: 'right', margin: [0, 5, 0, 5], font: 'Helvetica' }
+    { text: `${currencySymbol}${payroll.taxAmount.toFixed(2)}`, alignment: 'right', margin: [0, 5, 0, 5], font: 'Helvetica' }
   ]);
 
   const docDefinition = {
@@ -118,7 +119,7 @@ const generatePayslipPdf = (payroll) => {
                   body: [
                     [
                       { text: 'Basic Salary', margin: [0, 5, 0, 5], bold: true, font: 'Helvetica' },
-                      { text: `$${payroll.basicSalary.toFixed(2)}`, alignment: 'right', margin: [0, 5, 0, 5], bold: true, font: 'Helvetica' }
+                      { text: `${currencySymbol}${payroll.basicSalary.toFixed(2)}`, alignment: 'right', margin: [0, 5, 0, 5], bold: true, font: 'Helvetica' }
                     ],
                     ...allowancesRows
                   ]
@@ -161,7 +162,7 @@ const generatePayslipPdf = (payroll) => {
           body: [
             [
               { text: 'TOTAL NET SALARY DISTRIBUTED', bold: true, fontSize: 12, margin: [0, 5, 0, 5], font: 'Helvetica' },
-              { text: `$${payroll.netPay.toFixed(2)}`, alignment: 'right', bold: true, fontSize: 14, color: '#4F8EF7', margin: [0, 5, 0, 5], font: 'Helvetica' }
+              { text: `${currencySymbol}${payroll.netPay.toFixed(2)}`, alignment: 'right', bold: true, fontSize: 14, color: '#4F8EF7', margin: [0, 5, 0, 5], font: 'Helvetica' }
             ]
           ]
         },

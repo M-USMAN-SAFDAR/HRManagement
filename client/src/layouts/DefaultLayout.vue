@@ -79,11 +79,14 @@ const handleOutsideClick = (e) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   animateSidebarLinks('.sidebar-nav');
   animateMagnetic('.magnetic-btn');
   document.documentElement.classList.add('dark');
   document.addEventListener('click', handleOutsideClick);
+  if (!authStore.companySettings) {
+    await authStore.fetchCompanySettings();
+  }
 });
 
 onUnmounted(() => {
@@ -111,7 +114,7 @@ onUnmounted(() => {
         <!-- Brand logo -->
         <div class="flex items-center gap-2.5">
           <HeaderCanvas />
-          <span class="text-sm font-bold tracking-tight text-brand-blue hidden sm:block">Vercel HR</span>
+          <span class="text-sm font-bold tracking-tight text-brand-blue hidden sm:block">{{ authStore.companySettings?.name || 'Vercel HR' }}</span>
         </div>
 
         <!-- Desktop page title separator -->
@@ -275,7 +278,7 @@ onUnmounted(() => {
             <div class="flex items-center gap-2.5">
               <HeaderCanvas />
               <div>
-                <h2 class="text-sm font-bold tracking-tight text-brand-blue">Vercel HR</h2>
+                <h2 class="text-sm font-bold tracking-tight text-brand-blue">{{ authStore.companySettings?.name || 'Vercel HR' }}</h2>
                 <span class="text-[9px] text-brand-purple font-mono uppercase tracking-widest">{{ role }}</span>
               </div>
             </div>
