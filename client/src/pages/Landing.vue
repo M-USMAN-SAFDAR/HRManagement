@@ -148,7 +148,7 @@ onUnmounted(() => {
             <div>
               <h3 class="text-xl font-bold">Standard</h3>
               <p class="text-slate-400 text-sm mt-1">For small startups</p>
-              <div class="text-3xl font-extrabold text-white mt-6">$4<span class="text-sm font-normal text-slate-400">/emp/month</span></div>
+              <div class="text-3xl font-extrabold text-white mt-6">Rs. 1,100<span class="text-sm font-normal text-slate-400">/emp/month</span></div>
               <ul class="space-y-3.5 mt-8 text-sm text-slate-300">
                 <li class="flex items-center gap-2">✓ Self-Service Portal</li>
                 <li class="flex items-center gap-2">✓ Clock Heatmaps</li>
@@ -166,7 +166,7 @@ onUnmounted(() => {
             <div>
               <h3 class="text-xl font-bold">Pro</h3>
               <p class="text-slate-400 text-sm mt-1">For scaling businesses</p>
-              <div class="text-3xl font-extrabold text-brand-blue mt-6">$8<span class="text-sm font-normal text-slate-400">/emp/month</span></div>
+              <div class="text-3xl font-extrabold text-brand-blue mt-6">Rs. 2,200<span class="text-sm font-normal text-slate-400">/emp/month</span></div>
               <ul class="space-y-3.5 mt-8 text-sm text-slate-300">
                 <li class="flex items-center gap-2">✓ All Standard Features</li>
                 <li class="flex items-center gap-2">✓ Automated Payroll Runs</li>
