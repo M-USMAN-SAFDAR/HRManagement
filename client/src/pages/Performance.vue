@@ -9,7 +9,7 @@ import HrmButton from '../components/ui/HrmButton.vue';
 import HrmModal from '../components/ui/HrmModal.vue';
 import HrmTable from '../components/ui/HrmTable.vue';
 import HrmBadge from '../components/ui/HrmBadge.vue';
-import { Award, Plus, Target, CheckSquare, Star, ArrowUpRight } from 'lucide-vue-next';
+import { Plus, Target, Star } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const performanceStore = usePerformanceStore();

@@ -10,7 +10,7 @@ import HrmButton from '../components/ui/HrmButton.vue';
 import HrmModal from '../components/ui/HrmModal.vue';
 import HrmTable from '../components/ui/HrmTable.vue';
 import HrmBadge from '../components/ui/HrmBadge.vue';
-import { BookOpen, Plus, Send, PlayCircle, FileText, ExternalLink, GraduationCap } from 'lucide-vue-next';
+import { Plus, PlayCircle, FileText, ExternalLink, GraduationCap } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const lndStore = useLndStore();

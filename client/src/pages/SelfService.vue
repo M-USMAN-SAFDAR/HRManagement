@@ -6,7 +6,7 @@ import api from '../services/api';
 import HrmButton from '../components/ui/HrmButton.vue';
 import HrmTable from '../components/ui/HrmTable.vue';
 import HrmBadge from '../components/ui/HrmBadge.vue';
-import { User, Phone, MapPin, Calendar, FileText, Lock, Save } from 'lucide-vue-next';
+import { User, Phone, FileText, Save } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const { addToast } = useToast();

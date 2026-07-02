@@ -6,12 +6,12 @@ import { useLeaveStore } from '../stores/leave';
 import { useEmployeeStore } from '../stores/employee';
 import { useToast } from '../composables/useToast';
 import { useGsap } from '../composables/useGsap';
-import { formatDate, formatLocalDate } from '../utils/date';
+import { formatDate } from '../utils/date';
 import HrmButton from '../components/ui/HrmButton.vue';
 import HrmModal from '../components/ui/HrmModal.vue';
 import HrmTable from '../components/ui/HrmTable.vue';
 import HrmBadge from '../components/ui/HrmBadge.vue';
-import { Calendar, Clock, FileText, Send, UserCheck, CalendarRange, Eye, Sliders } from 'lucide-vue-next';
+import { Calendar, Clock, FileText, Send, UserCheck, CalendarRange, Sliders } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const attendanceStore = useAttendanceStore();

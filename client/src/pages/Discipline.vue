@@ -8,7 +8,7 @@ import HrmButton from '../components/ui/HrmButton.vue';
 import HrmModal from '../components/ui/HrmModal.vue';
 import HrmTable from '../components/ui/HrmTable.vue';
 import HrmBadge from '../components/ui/HrmBadge.vue';
-import { ShieldAlert, Plus, CheckCircle, Search, FileText } from 'lucide-vue-next';
+import { ShieldAlert, Plus, CheckCircle } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const { addToast } = useToast();

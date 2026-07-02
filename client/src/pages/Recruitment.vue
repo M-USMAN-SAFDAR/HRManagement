@@ -7,7 +7,7 @@ import draggable from 'vuedraggable';
 import HrmButton from '../components/ui/HrmButton.vue';
 import HrmModal from '../components/ui/HrmModal.vue';
 import HrmBadge from '../components/ui/HrmBadge.vue';
-import { Briefcase, User, FileText, Plus, MessageSquare, Save } from 'lucide-vue-next';
+import { FileText, Plus, MessageSquare, Save } from 'lucide-vue-next';
 
 const recruitmentStore = useRecruitmentStore();
 const { addToast } = useToast();

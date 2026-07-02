@@ -4,7 +4,7 @@ import { useAuthStore } from '../stores/auth';
 import { useToast } from '../composables/useToast';
 import api from '../services/api';
 import HrmButton from '../components/ui/HrmButton.vue';
-import { Heart, MessageSquare, Send, Sparkles, Megaphone } from 'lucide-vue-next';
+import { Heart, Send, Sparkles, Megaphone } from 'lucide-vue-next';
 
 const authStore = useAuthStore();
 const { addToast } = useToast();

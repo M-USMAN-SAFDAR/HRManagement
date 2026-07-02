@@ -6,7 +6,7 @@ import { useToast } from '../composables/useToast';
 import HrmButton from '../components/ui/HrmButton.vue';
 import HrmTable from '../components/ui/HrmTable.vue';
 import HrmBadge from '../components/ui/HrmBadge.vue';
-import { DollarSign, FileText, CheckCircle2, ChevronRight, History } from 'lucide-vue-next';
+import { FileText, CheckCircle2, History } from 'lucide-vue-next';
 
 const payrollStore = usePayrollStore();
 const authStore = useAuthStore();

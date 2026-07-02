@@ -1,7 +1,6 @@
 const cron = require('node-cron');
 const Employee = require('../models/Employee');
 const LeaveRequest = require('../models/LeaveRequest');
-const transporter = require('../config/nodemailer');
 
 const initCronJobs = () => {
   console.log('Cron Job Scheduler Initialized.');

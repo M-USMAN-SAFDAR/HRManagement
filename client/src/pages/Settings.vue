@@ -7,7 +7,7 @@ import { useToast } from '../composables/useToast';
 import HrmButton from '../components/ui/HrmButton.vue';
 import HrmModal from '../components/ui/HrmModal.vue';
 import HrmTable from '../components/ui/HrmTable.vue';
-import { Settings, Save, Plus, HelpCircle, Edit3, Trash2, Briefcase } from 'lucide-vue-next';
+import { Settings, Save, Plus, Edit3, Trash2, Briefcase } from 'lucide-vue-next';
 
 const settingsStore = useSettingsStore();
 const employeeStore = useEmployeeStore();

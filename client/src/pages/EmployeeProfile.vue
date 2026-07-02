@@ -9,8 +9,8 @@ import { formatDate, formatLocalDate } from '../utils/date';
 import HrmButton from '../components/ui/HrmButton.vue';
 import HrmBadge from '../components/ui/HrmBadge.vue';
 import { 
-  ArrowLeft, User, Phone, Mail, MapPin, Briefcase, Calendar, 
-  FileText, DollarSign, Award, Shield, Save, Plus, Trash2, Globe
+  ArrowLeft, User, Phone, Mail, Briefcase, 
+  FileText, DollarSign, Award, Save, Plus, Trash2, Globe
 } from 'lucide-vue-next';
 
 const route = useRoute();
