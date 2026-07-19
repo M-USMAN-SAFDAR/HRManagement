@@ -1,0 +1,21 @@
+{
+  "name": "hrm-app",
+  "version": "1.0.0",
+  "description": "A Dribbble-quality, high-fidelity Human Resource Management (HRM) web application featuring 3D visuals, reactive user profiles, real-time clock heatmaps, payslip generation, and an ATS pipeline.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M-USMAN-SAFDAR/HRManagement.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/M-USMAN-SAFDAR/HRManagement/issues"
+  },
+  "homepage": "https://github.com/M-USMAN-SAFDAR/HRManagement#readme"
+}
