@@ -27,8 +27,8 @@ const generateRefreshToken = (user) => {
 const setRefreshTokenCookie = (res, token) => {
   res.cookie('refreshToken', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: true, // Must be true for SameSite: 'none'
+    sameSite: 'none', // Allow cross-site cookies
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };

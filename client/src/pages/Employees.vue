@@ -90,8 +90,11 @@ const handleCsvChange = (e) => {
 };
 
 const triggerExport = () => {
-  // Direct file download download request to backend
-  window.open('/api/employees/export/csv', '_blank');
+  // Direct file download request to backend
+  const exportUrl = import.meta.env.VITE_API_URL 
+    ? `${import.meta.env.VITE_API_URL}/employees/export/csv` 
+    : '/api/employees/export/csv';
+  window.open(exportUrl, '_blank');
   addToast('Employee list export started successfully.', 'success');
 };
 
