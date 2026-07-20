@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://hrmanagement-hc7l.onrender.com/api/:path*"
+      "destination": "https://hrmanagement-1-dt8y.onrender.com/api/:path*"
     },
     {
       "source": "/uploads/:path*",
-      "destination": "https://hrmanagement-hc7l.onrender.com/uploads/:path*"
+      "destination": "https://hrmanagement-1-dt8y.onrender.com/uploads/:path*"
     },
     {
       "source": "/:path*",
